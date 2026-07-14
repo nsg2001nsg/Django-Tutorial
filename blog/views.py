@@ -1,34 +1,26 @@
 from django.shortcuts import render
-from django.http import HttpResponse
-
-posts = [
-    {
-        'author': 'Nandini',
-        'title': 'Blog Post 1',
-        'content': 'Content for blog 1',
-        'date_posted': 'July 11, 2026'
-    },
-    {
-        'author': 'Nandini',
-        'title': 'Blog Post 2',
-        'content': 'Content for blog 2',
-        'date_posted': 'July 12, 2026'
-    },
-    {
-        'author': 'Nandini',
-        'title': 'Blog Post 3',
-        'content': 'Content for blog 3',
-        'date_posted': 'July 13, 2026'
-    },
-]
+from django.views.generic import ListView, DetailView
+from .models import Post
 
 
 # Create your views here.
 def home(request):
     context = {
-        'posts': posts
+        'posts': Post.objects.all()
     }
     return render(request, 'blog/home.html', context)
+
+
+class PostListView(ListView):
+    model = Post
+    template_name = 'blog/home.html'  # app/model_viewtype.html
+    context_object_name = 'posts'
+    ordering = ['-date_posted']
+
+
+class PostDetailView(DetailView):
+    model = Post
+
 
 
 def about(request):
